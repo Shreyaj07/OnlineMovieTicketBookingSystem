@@ -1,0 +1,96 @@
+#database creation queries
+
+mysql> create database movieticketbooking; 
+Query OK, 1 row affected (0.01 sec) 
+
+mysql> use movieticketbooking; 
+Database changed 
+
+mysql> create table Customer( 
+ -> C_id int primary key, 
+ -> CName varchar(30), 
+ -> PhNo dec(10), 
+ -> Age int, 
+ -> NoOfSeats int); 
+Query OK, 0 rows affected (0.04 sec) 
+
+mysql> create table Login( 
+ -> Email varchar(50) primary key, 
+ -> Password varchar(15) unique); 
+Query OK, 0 rows affected (0.10 sec) 
+
+mysql> create table has_login( 
+ -> C_id int primary key, 
+ -> Email varchar(50), 
+ -> foreign key(C_id) references Customer(C_id) on delete cascade on update cascade, 
+ -> foreign key (Email) references Login(Email) on delete cascade on update cascade); 
+Query OK, 0 rows affected (0.08 sec) 
+
+mysql> create table Ticket( 
+ -> Tkt_id int primary key, 
+ -> Tkt_type varchar(8), 
+ -> price int, 
+ -> C_id int, 
+ -> Show_id int); 
+Query OK, 0 rows affected (0.06 sec) 
+
+mysql> create table Transaction( 
+ -> T_id int primary key, 
+ -> T_date date, 
+ -> T_type varchar(15), 
+ -> Amount int, 
+ -> C_id int); 
+Query OK, 0 rows affected (0.03 sec) 
+
+mysql> create table Movie( 
+ -> M_id int primary key, 
+ -> MName varchar(30), 
+ -> duration_in_mins int, 
+ -> Release_dt date); 
+Query OK, 0 rows affected (0.05 sec) 
+
+mysql> create table Theater( 
+ -> Th_id int primary key, 
+ -> ThName varchar(30), 
+ -> location varchar(50), 
+ -> no_of_screens int); 
+Query OK, 0 rows affected (0.06 sec) 
+
+mysql> create table Screen( 
+ -> ScreenName varchar(20) primary key, 
+ -> Screen_no int, 
+ -> No_of_seats int); 
+Query OK, 0 rows affected (0.04 sec) 
+
+mysql> create table TheaterScreen( 
+ -> Th_id int,ScreenName varchar(20), 
+ -> primary key(Th_id,ScreenName), 
+ -> foreign key(Th_id) references Theater(Th_id), 
+ -> foreign key(ScreenName) references Screen(ScreenName)); 
+Query OK, 0 rows affected (0.12 sec) 
+
+mysql> create table MovieSchedule( 
+ -> Show_id int primary key, 
+ -> Show_date date, 
+ -> Show_time time, 
+ -> M_id int, 
+ -> Th_id int, 
+ -> foreign key(M_id) references Movie(M_id) on delete cascade on update cascade, 
+ -> foreign key(Th_id) references Theater(Th_id) on delete cascade on update cascade); 
+Query OK, 0 rows affected (0.12 sec) 
+
+mysql> alter table Transaction add foreign key(C_id) references Customer(C_id); 
+Query OK, 0 rows affected (0.08 sec) 
+Records: 0 Duplicates: 0 Warnings: 0 
+
+mysql> alter table Ticket add foreign key(Show_id) references MovieSchedule(Show_id), add 
+foreign key(C_id) references Customer(C_id); 
+Query OK, 0 rows affected (0.16 sec) 
+Records: 0 Duplicates: 0 Warnings: 0 
+
+mysql> alter table MovieSchedule add foreign key(M_id) references Movie(M_id), add foreign 
+key(Th_id) references Theater(Th_id); 
+Query OK, 0 rows affected (0.15 sec) 
+Records: 0 Duplicates: 0 Warnings: 0 
+
+mysql> desc Login; 
